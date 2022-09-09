@@ -15,11 +15,11 @@ function createModelUser(Sequelize, DataTypes) {
       type: DataTypes.STRING,
       allowNull: false,
     },
-    fullname: {
+    fullName: {
       type: DataTypes.STRING,
       allowNull: false,
     },
-    shortname: {
+    shortName: {
       type: DataTypes.STRING,
       allowNull: false,
     },

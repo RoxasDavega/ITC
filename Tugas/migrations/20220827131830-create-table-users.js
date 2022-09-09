@@ -18,11 +18,11 @@ module.exports = {
         type: Sequelize.STRING,
         allowNull: false,
       },
-      fullname: {
+      fullName: {
         type: Sequelize.STRING,
         allowNull: false,
       },
-      shortname: {
+      shortName: {
         type: Sequelize.STRING,
         allowNull: false,
       },
