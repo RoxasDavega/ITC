@@ -1,8 +1,8 @@
 const express = require("express");
 const router = express.Router();
-const { handlerGetAllUser, handlerGetUserById, handlerSearchUser, handlerPostUser, handlerUpdateUser, handlerDeleteUser } = require("./handler");
+const { handlerGetAllUsers, handlerGetUserById, handlerSearchUser, handlerPostUser, handlerUpdateUser, handlerDeleteUser } = require("./handler");
 
-router.get("/", handlerGetAllUser);
+router.get("/", handlerGetAllUsers);
 
 router.get("/:id", handlerGetUserById);
 

@@ -3,9 +3,10 @@ const bcrypt = require("bcrypt");
 const Sequelize = require("sequelize");
 const Op = Sequelize.Op;
 
-async function handlerGetAllUser(req, res) {
+//To Show All Users
+async function handlerGetAllUsers(req, res) {
   const users = await User.findAll({
-    attributes: ["id", "fullName", "shortName", "photo"],
+    attributes: ["id", "fullName", "shortName", "photo"], //Show Users with specific column
   });
   return res.status(200).json({
     status: "success",
@@ -13,12 +14,12 @@ async function handlerGetAllUser(req, res) {
     data: users,
   });
 }
-
+//To Show user by id or search
 async function handlerGetUserById(req, res) {
   const { id } = req.params;
-  if (id === "search") {
+  if (id === "search") { //if user want to search
     const { name } = req.query;
-    if (name) {
+    if (name) { //if name is found
       const users = await User.findAll({
         attributes: ["id", "fullName", "shortName", "photo"],
         where: {
@@ -32,16 +33,20 @@ async function handlerGetUserById(req, res) {
         message: "Successfully get user by name",
         data: users,
       });
-    }
+    } //if query name is not found
+    return res.status(404).json({
+      status: "failed",
+      message: "Attributes not found",
+    });
   }
-
+  //search one user by id
   const user = await User.findOne({
     where: {
       id: `${id}`,
     },
   });
 
-  if (user) {
+  if (user) { //user is found
     return res.status(200).json({
       status: "success",
       message: "Successfully get user by id",
@@ -54,26 +59,7 @@ async function handlerGetUserById(req, res) {
     });
   }
 }
-
-async function handlerSearchUser(req, res) {
-  const { name } = req.query;
-  if (name) {
-    const users = await User.findAll({
-      attributes: ["id", "fullName", "shortName", "photo"],
-      where: {
-        fullName: {
-          [Op.like]: `%${name}%`,
-        },
-      },
-    });
-    return res.status(200).json({
-      status: "success",
-      message: "Successfully get user by name",
-      data: users,
-    });
-  }
-}
-
+//Input User
 async function handlerPostUser(req, res) {
   const {
     email,
@@ -84,7 +70,7 @@ async function handlerPostUser(req, res) {
     angkatan,
     jabatan,
   } = req.body;
-
+  //hash password with bcrypt
   const hashPassword = await bcrypt.hash(password, 10);
   try {
     await User.create({
@@ -99,9 +85,9 @@ async function handlerPostUser(req, res) {
     return res.status(200).json({
       status: "success",
       message: "Successfully create user",
-      data:  await User.findOne({
+      data:  await User.findOne({ 
         attributes: { exclude: ["password", "createdAt", "updatedAt"] },
-        order: [ [ 'createdAt', 'DESC']],
+        order: [ [ 'createdAt', 'DESC']], //to sent last data inserted to database
       }),
     });
   } catch (error) {
@@ -111,19 +97,19 @@ async function handlerPostUser(req, res) {
     });
   }
 }
-
+//Update User
 async function handlerUpdateUser(req, res) {
   const { id } = req.params;
-  const { fullName, shortName, biodata, angkatan, jabatan } = req.body;
-  const user = await User.findByPk(id);
-  if (!user) {
+  const { fullName, shortName, biodata, angkatan, jabatan } = req.body; //get value from user
+  const user = await User.findByPk(id); //search user by id
+  if (!user) { //if user not found
     res.status(404).json({
       status: "failed",
       message: "User not found",
     });
   } else {
     try {
-      await user.update({
+      await user.update({ //update to database
         fullName,
         shortName,
         biodata,
@@ -142,18 +128,18 @@ async function handlerUpdateUser(req, res) {
     }
   }
 }
-
+//Delete user
 async function handlerDeleteUser(req, res) {
   const { id } = req.params;
-  const user = await User.findByPk(id);
-  if (!user) {
+  const user = await User.findByPk(id); //to search user by primary key id
+  if (!user) { //if user not found
     return res.status(404).json({
       status: "failed",
       message: "User not found",
     });
   } else {
     try{
-      await user.destroy();
+      await user.destroy(); //delete user
       return res.status(200).json({
         status: "success",
         message: "Successfully delete user",
@@ -169,9 +155,8 @@ async function handlerDeleteUser(req, res) {
 }
 
 module.exports = {
-  handlerGetAllUser,
+  handlerGetAllUsers,
   handlerGetUserById, 
-  handlerSearchUser,
   handlerPostUser,
   handlerUpdateUser,
   handlerDeleteUser,
