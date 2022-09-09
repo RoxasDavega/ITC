@@ -42,7 +42,7 @@ async function handlerGetUserById(req, res) {
 async function handlerSearchUser(req, res) {
   const { name } = req.query;
   if (name) {
-    //if name is found
+    //if name is not null
     const users = await User.findAll({
       attributes: ["id", "fullName", "shortName", "photo"],
       where: {
@@ -56,7 +56,7 @@ async function handlerSearchUser(req, res) {
       message: "Successfully get user by name",
       data: users,
     });
-  } //if query name is not found
+  } //if query name is null or not found
   return res.status(404).json({
     status: "failed",
     message: "Attributes not found",
