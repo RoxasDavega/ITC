@@ -15,7 +15,7 @@ async function handlerGetAllUsers(req, res) {
   });
 }
 //To Show user by id or search
-async function handlerGetUserById(req, res) {
+async function handlerGetUser(req, res) {
   const { id } = req.params;
   if (id === "search") { //if user want to search
     const { name } = req.query;
@@ -156,7 +156,7 @@ async function handlerDeleteUser(req, res) {
 
 module.exports = {
   handlerGetAllUsers,
-  handlerGetUserById, 
+  handlerGetUser, 
   handlerPostUser,
   handlerUpdateUser,
   handlerDeleteUser,
